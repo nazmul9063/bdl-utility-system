@@ -1,15 +1,14 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+
+  <title>Utility & Task Management</title>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BDL Utility & Task Management</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
 
     html, body {
       margin: 0;
@@ -17,7 +16,6 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #f5f7fa;
     }
 
     iframe {
@@ -27,78 +25,115 @@
       display: block;
     }
 
-    #loading {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #ffffff;
-      z-index: 10;
-      font-family: Arial, sans-serif;
-      color: #2563eb;
-    }
-
-    .spinner {
-      width: 38px;
-      height: 38px;
-      border: 4px solid #e5e7eb;
-      border-top-color: #2563eb;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
   </style>
+
 </head>
 
 <body>
 
-  <div id="loading">
-    <div style="text-align:center">
-      <div class="spinner"></div>
-      <p>Loading BDL Utility System...</p>
-    </div>
-  </div>
-
   <iframe
     id="appFrame"
-    allow="clipboard-read; clipboard-write"
-    referrerpolicy="strict-origin-when-cross-origin">
+    allow="clipboard-read; clipboard-write">
   </iframe>
 
   <script>
+
+    // =====================================================
+    // GOOGLE APPS SCRIPT WEB APP URL
+    // =====================================================
+
     const APP_URL =
       "https://script.google.com/macros/s/AKfycby0XZKrSx5_aY0kmYdM6c-1Sid6NAFuD0TnfCVq3Q7fLke0DJSKDw4yek5_ld3ZLBuQ/exec";
+
+
+    // =====================================================
+    // GET URL PARAMETERS
+    // =====================================================
 
     const params = new URLSearchParams(
       window.location.search
     );
 
-    const appURL = new URL(APP_URL);
+    const page = String(
+      params.get("page") || ""
+    ).trim().toLowerCase();
 
-    appURL.searchParams.set("embedded", "true");
+    const user = params.get("user") || "";
 
-    const page = params.get("page");
-    const user = params.get("user");
 
-    if (page) {
-      appURL.searchParams.set("page", page);
-    }
+    // =====================================================
+    // INDIVIDUAL MODULE TAB TITLES
+    // =====================================================
 
-    if (user) {
-      appURL.searchParams.set("user", user);
-    }
+    const pageTitles = {
 
-    const frame = document.getElementById("appFrame");
+      asset: "Asset Management",
 
-    frame.onload = function() {
-      document.getElementById("loading").style.display = "none";
+      maintenance: "Maintenance Management",
+
+      genlog: "Generator Operating Log",
+
+      boiler: "Boiler Operating Log"
+
     };
 
-    frame.src = appURL.toString();
+
+    // =====================================================
+    // SET BROWSER TAB TITLE
+    // =====================================================
+
+    document.title =
+      pageTitles[page] ||
+      "Utility & Task Management";
+
+
+    // =====================================================
+    // BUILD GOOGLE APPS SCRIPT URL
+    // =====================================================
+
+    const appURL = new URL(APP_URL);
+
+    appURL.searchParams.set(
+      "embedded",
+      "true"
+    );
+
+
+    // =====================================================
+    // FORWARD MODULE PAGE
+    // =====================================================
+
+    if (page) {
+
+      appURL.searchParams.set(
+        "page",
+        page
+      );
+
+    }
+
+
+    // =====================================================
+    // FORWARD LOGGED-IN USERNAME
+    // =====================================================
+
+    if (user) {
+
+      appURL.searchParams.set(
+        "user",
+        user
+      );
+
+    }
+
+
+    // =====================================================
+    // LOAD APPLICATION
+    // =====================================================
+
+    document.getElementById("appFrame").src =
+      appURL.toString();
+
   </script>
 
 </body>
