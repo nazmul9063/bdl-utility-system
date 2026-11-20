@@ -1,1 +1,140 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>Utility & Task Management</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <iframe
+    id="appFrame"
+    allow="clipboard-read; clipboard-write">
+  </iframe>
+
+  <script>
+
+    // =====================================================
+    // GOOGLE APPS SCRIPT WEB APP URL
+    // =====================================================
+
+    const APP_URL =
+      "https://script.google.com/macros/s/AKfycby0XZKrSx5_aY0kmYdM6c-1Sid6NAFuD0TnfCVq3Q7fLke0DJSKDw4yek5_ld3ZLBuQ/exec";
+
+
+    // =====================================================
+    // GET URL PARAMETERS
+    // =====================================================
+
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const page = String(
+      params.get("page") || ""
+    ).trim().toLowerCase();
+
+    const user = params.get("user") || "";
+
+
+    // =====================================================
+    // INDIVIDUAL MODULE TAB TITLES
+    // =====================================================
+
+    const pageTitles = {
+
+      asset: "Asset Management",
+
+      maintenance: "Maintenance Management",
+
+      genlog: "Generator Operating Log",
+
+      boiler: "Boiler Operating Log"
+
+    };
+
+
+    // =====================================================
+    // SET BROWSER TAB TITLE
+    // =====================================================
+
+    document.title =
+      pageTitles[page] ||
+      "Utility & Task Management";
+
+
+    // =====================================================
+    // BUILD GOOGLE APPS SCRIPT URL
+    // =====================================================
+
+    const appURL = new URL(APP_URL);
+
+    appURL.searchParams.set(
+      "embedded",
+      "true"
+    );
+
+
+    // =====================================================
+    // FORWARD MODULE PAGE
+    // =====================================================
+
+    if (page) {
+
+      appURL.searchParams.set(
+        "page",
+        page
+      );
+
+    }
+
+
+    // =====================================================
+    // FORWARD LOGGED-IN USERNAME
+    // =====================================================
+
+    if (user) {
+
+      appURL.searchParams.set(
+        "user",
+        user
+      );
+
+    }
+
+
+    // =====================================================
+    // LOAD APPLICATION
+    // =====================================================
+
+    document.getElementById("appFrame").src =
+      appURL.toString();
+
+  </script>
+
+</body>
+</html>
